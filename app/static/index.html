@@ -89,7 +89,7 @@
       $('stage').textContent = job.stage; $('percent').textContent = job.progress+'%'; $('bar').style.width = job.progress+'%';
       if(job.storyboard && !$('story').classList.contains('visible')){
         $('story').classList.add('visible');$('story-title').textContent = job.storyboard.title;
-        $('shots').innerHTML = job.storyboard.shots.map((s,i)=>`<article class="shot"><div class="shot-num">SHOT ${String(i+1).padStart(2,'0')} / 04:00</div><strong>${esc(s.title)}</strong><small>${esc(s.action)}</small></article>`).join('');
+        $('shots').innerHTML = job.storyboard.shots.map((s,i)=>`<article class="shot"><div class="shot-num">SHOT ${String(i+1).padStart(2,'0')} / 4 СЕК</div><strong>${esc(s.title)}</strong><small>${esc(s.action)}</small></article>`).join('');
       }
       if(job.status === 'failed'){
         clearInterval(timer);$('stage').textContent='Ошибка рендера'; $('stage').classList.add('error');
