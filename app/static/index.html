@@ -1,119 +1,123 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>BLOCKFRAME — AI Minecraft Machinima Studio</title>
-  <style>
-    :root{color-scheme:dark;--bg:#0b100f;--panel:#121a18;--panel2:#19231e;--line:#29352f;--ink:#ecf1e9;--soft:#a8b8ab;--muted:#74867b;--accent:#c5e37d;--warm:#dcb58c}
-    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 93% 4%,#253d31 0%,transparent 35%),radial-gradient(ellipse at 3% 61%,#1a2e24 0%,transparent 30%),var(--bg);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);min-height:100vh}
-    .wrap{max-width:1180px;margin:auto;padding:0 28px 60px}
-    header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding:23px 0;gap:20px;flex-wrap:wrap}
-    .logo{font-size:19px;letter-spacing:.2em;font-weight:900;display:flex;gap:13px;align-items:center}.mark{width:30px;height:30px;border:7px solid var(--accent);transform:rotate(9deg);box-shadow:7px -7px #59734e}
-    .tag{color:var(--soft);font-size:12px;border:1px solid var(--line);padding:7px 12px;border-radius:100px}
-    .kicker{letter-spacing:.24em;font-size:11px;font-weight:750;text-transform:uppercase;color:var(--accent)}
-    .hero{padding:55px 0 35px;display:grid;grid-template-columns:1.3fr .7fr;gap:55px;align-items:center}
-    h1{font-size:clamp(36px,5vw,62px);line-height:1.04;letter-spacing:-.05em;max-width:750px;margin:18px 0 18px;font-weight:800}
-    h1 em{color:var(--accent);font-style:normal}p{color:var(--soft);margin:0}.intro{max-width:580px;font-size:16px}
-    .preview-frame{background:linear-gradient(145deg,#435e62,#9eb1a0 40%,#b8ba84 41%,#8b8e60 68%,#293a31 69%);height:240px;border:1px solid #4c685a;border-radius:18px;position:relative;overflow:hidden;box-shadow:0 20px 60px #0006}
-    .preview-frame:before{content:"";position:absolute;left:42%;top:27%;width:46px;height:51px;background:#bea085;box-shadow:0 51px #3d5e8c,0 100px #544838,-35px 50px #bd9c7d,35px 50px #bd9c7d;image-rendering:pixelated;transform:rotate(-4deg)}
-    .preview-frame:after{content:"";position:absolute;right:12%;bottom:13%;width:21px;height:125px;background:#665035;box-shadow:0 -75px #426c45,-31px -60px #426c45,31px -60px #426c45;transform:rotate(7deg)}
-    .frame-footer{position:absolute;bottom:13px;left:14px;padding:7px 10px;background:#090e0bbd;border:1px solid #ffffff24;color:#fff;border-radius:8px;font-size:10px;letter-spacing:.1em;z-index:2}
-    .grid{display:grid;grid-template-columns:1fr 370px;gap:22px;align-items:start}
-    .panel{background:linear-gradient(145deg,#17221c,#111916);border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:0 12px 40px #0002}
-    .panel h2,.panel h3{margin:0 0 8px;font-size:21px;letter-spacing:-.03em}
-    .panel-lead{margin-bottom:22px;font-size:13px}
-    label{display:block;color:#cbd7c9;margin:0 0 9px;font-size:13px;font-weight:600}
-    textarea{width:100%;min-height:164px;resize:vertical;border-radius:13px;border:1px solid #3b4d41;background:#0a1310;color:var(--ink);padding:17px 18px;font:14px/1.6 inherit;line-height:1.6;outline:none;transition:border .2s}
-    textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px #c5e37d20}
-    .controls{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:20px 0}.select{width:100%;padding:12px;border-radius:10px;border:1px solid #405246;background:#101b15;color:#f2f4e8;font-size:14px}
-    .check{display:flex;align-items:center;gap:9px;margin-bottom:22px;color:var(--soft);font-size:13px;cursor:pointer}.check input{accent-color:var(--accent);width:16px;height:16px}
-    button{border:0;border-radius:11px;background:var(--accent);color:#1b2814;font-size:14px;font-weight:800;padding:15px 20px;cursor:pointer;transition:transform .15s,opacity .15s}button:hover{transform:translateY(-1px)}button:disabled{opacity:.4;cursor:not-allowed;transform:none}
-    .submit-row{display:flex;align-items:center;gap:16px}.main-button{min-width:220px}.muted{color:var(--muted);font-size:12px}.note{color:var(--warm);font-size:12px;margin-top:17px}
-    .pipeline{padding:0;margin:21px 0 0;list-style:none;counter-reset:pipe}.pipeline li{position:relative;display:flex;gap:13px;padding:0 0 26px}.pipeline li:last-child{padding-bottom:0}.pipeline li:not(:last-child):after{content:"";height:24px;width:1px;background:#425345;position:absolute;left:17px;top:32px}
-    .number{width:35px;height:35px;display:grid;place-items:center;border:1px solid #536950;background:#243428;border-radius:9px;color:var(--accent);font-weight:800;font-size:12px;flex-shrink:0}.step-title{font-weight:750;font-size:14px;margin:0}.step-copy{color:var(--muted);font-size:12px}
-    .status{margin-top:24px;border:1px solid var(--line);padding:23px 25px;background:#0e1713;border-radius:16px;display:none}.status.visible{display:block}.status-top{display:flex;justify-content:space-between;gap:16px;align-items:center}.stage{font-weight:700}.percent{font-weight:800;color:var(--accent)}.track{height:8px;border-radius:20px;background:#27362c;margin:18px 0 10px;overflow:hidden}.bar{height:100%;width:0;background:linear-gradient(90deg,#6e9960,#d0ee89);transition:width .6s}.error{color:#e6a1a1}
-    .story{margin-top:27px;display:none}.story.visible{display:block}.section-title{margin:0 0 13px;font-weight:800;font-size:18px}.shots{display:grid;grid-template-columns:repeat(5,1fr);gap:11px}.shot{border:1px solid var(--line);border-radius:13px;min-height:159px;padding:16px;background:#141d18}.shot-num{font-size:11px;color:var(--accent);font-weight:800;letter-spacing:.1em}.shot strong{display:block;line-height:1.3;font-size:13px;margin:11px 0 6px}.shot small{display:block;color:var(--soft);font-size:11px}.result{margin-top:30px;display:none}.result.visible{display:block}.result video{display:block;width:100%;max-height:680px;border-radius:16px;background:#000;border:1px solid #3c4d3f}.result-actions{margin-top:14px;display:flex;gap:20px;flex-wrap:wrap;align-items:center}.result-actions a{color:var(--accent);font-weight:800;text-decoration:none}.result-actions a:hover{text-decoration:underline}.meta{font-size:13px;color:var(--soft)}
-    footer{margin-top:60px;border-top:1px solid var(--line);padding-top:21px;color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
-    @media(max-width:900px){.hero{grid-template-columns:1fr;gap:24px}.preview-frame{height:160px}.grid{grid-template-columns:1fr}.shots{grid-template-columns:repeat(3,1fr)}}
-    @media(max-width:600px){.wrap{padding:0 16px 30px}.hero{padding-top:38px}.panel{padding:20px}.shots{grid-template-columns:repeat(2,1fr)}.controls{grid-template-columns:1fr}.submit-row{flex-direction:column;align-items:stretch}}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>BLOCKFRAME — Minecraft Machinima from still images</title>
+<style>
+:root{--bg:#09110e;--panel:#131d18;--line:#34443a;--text:#ebf4ed;--muted:#9eaf9f;--accent:#b7e876;--danger:#f2a6a1}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#0b1310,#101a14);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+.wrap{max-width:1200px;margin:0 auto;padding:28px 20px 56px}.brand{font-weight:900;letter-spacing:.16em;color:var(--accent)}.pill{display:inline-block;border:1px solid #577050;color:#d6edbc;border-radius:99px;padding:6px 10px;font-size:11px;font-weight:800;margin-top:14px}
+h1{font-size:clamp(32px,4vw,55px);line-height:1.05;margin:20px 0}h1 em{font-style:normal;color:var(--accent)}p{color:var(--muted)}.hero{margin:16px 0 32px;max-width:810px}
+.grid{display:grid;grid-template-columns:1.3fr .8fr;gap:20px}.panel,.statusbox{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:23px}
+h2{font-size:22px;margin:0 0 8px}.kicker{color:var(--accent);font-weight:800;text-transform:uppercase;letter-spacing:.12em;font-size:12px;margin-bottom:8px}
+label{display:block;margin:13px 0 7px;font-size:13px;font-weight:750}textarea,select{background:#0d1511;color:var(--text);border:1px solid #455d4b;border-radius:10px;padding:12px 14px;font:inherit;width:100%;outline-offset:3px}textarea{min-height:143px;resize:vertical}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+button{border:0;border-radius:99px;padding:12px 18px;cursor:pointer;background:var(--accent);color:#16250f;font:700 14px system-ui}button:hover:not(:disabled){filter:brightness(1.06)}button:disabled{opacity:.55;cursor:not-allowed}.btn-secondary{background:#293b2e;color:var(--accent);border:1px solid #51694e}.check{display:flex;align-items:center;gap:8px;color:var(--muted);font-weight:400}.check input{accent-color:var(--accent)}.row{display:flex;justify-content:space-between;align-items:center;gap:15px}.flexwrap{flex-wrap:wrap}.muted{color:var(--muted);font-size:13px}.pipeline{padding-left:21px;color:var(--muted)}.pipeline li{margin-bottom:14px}.pipeline strong{color:var(--text)}.hint{font-size:12px;color:#a3b3a2}
+.status,.story,.editor,.result{display:none;margin-top:24px}.visible{display:block}.barwrap{height:9px;background:#25392a;border-radius:99px;overflow:hidden;margin:12px 0}.bar{background:linear-gradient(90deg,#73a45e,#ccf397);height:100%;width:0;transition:width .4s}.error{color:var(--danger)!important}
+.shots{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}.shot{background:#131f18;border:1px solid var(--line);border-radius:13px;overflow:hidden}.shot img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#223023}.shot-body{padding:12px}.shot small{display:block;color:var(--accent);font-size:11px;font-weight:800;letter-spacing:.05em}.shot strong{display:block;margin:5px 0;font-size:14px;line-height:1.25}.shot span{font-size:12px;color:var(--muted);display:block;line-height:1.4;min-height:47px}.shot .btn-secondary{font-size:12px;padding:7px 10px;margin-top:10px;width:100%}
+.editor-grid{display:grid;grid-template-columns:180px 1fr;gap:14px}.editor textarea{min-height:78px}.editor p{margin-bottom:7px}video{width:100%;max-height:690px;border:1px solid var(--line);border-radius:14px;background:#000}.actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px}.actions a{color:var(--accent);text-decoration:none;font-weight:800}.actions a:hover{text-decoration:underline}.log{font-size:12px;color:var(--muted)}
+@media(max-width:950px){.grid{grid-template-columns:1fr}.shots{grid-template-columns:repeat(3,1fr)}}@media(max-width:620px){.wrap{padding:18px 14px}.shots{grid-template-columns:repeat(2,1fr)}.controls,.editor-grid{grid-template-columns:1fr}}
+</style>
 </head>
-<body>
-<div class="wrap">
-  <header><div class="logo"><span class="mark" aria-hidden="true"></span>BLOCKFRAME</div><span class="tag">MINECRAFT MACHINIMA · PROTOTYPE 0.1</span></header>
-  <section class="hero">
-    <div><div class="kicker">AI-POWERED CINEMATIC STUDIO</div><h1>Напиши историю.<br><em>Получи кино.</em></h1><p class="intro">От одного текстового промпта — к сценарию из пяти сцен, последовательной GIF-анимации и 20-секундному MP4. Визуальный стиль: Minecraft Machinima.</p></div>
-    <div class="preview-frame" aria-label="Стилизованная иллюстрация Робинзона на острове"><div class="frame-footer">PROJECT 001 / ROBINSON ISLAND</div></div>
-  </section>
-  <div class="grid">
-    <div class="panel">
-      <div class="kicker">01 — YOUR STORY</div><h2>Создать ролик</h2><p class="panel-lead">Опиши сюжет. Сервис сам разработает раскадровку и соберёт видео.</p>
-      <form id="generator">
-        <label for="prompt">Сюжет / текстовый промпт</label>
-        <textarea id="prompt" minlength="12" maxlength="2000" required>Робинзон после кораблекрушения просыпается на необитаемом тропическом острове в мире Minecraft. Он осматривается, находит обломки корабля, делает первый инструмент и решает выжить. Кинематографичная история без слов, атмосферный рассвет, плавная камера.</textarea>
-        <div class="controls">
-          <div><label for="mode">Режим генерации</label><select class="select" id="mode"><option value="demo">Demo — без API-ключа</option><option value="ai">AI — GPT-Image-2.6 Sunburst</option></select></div>
-          <div><label for="fps">Частота экспортируемого видео</label><select class="select" id="fps"><option value="30">30 FPS · 600 кадров</option><option value="60">60 FPS · 1200 кадров</option></select></div>
-        </div>
-        <label class="check"><input id="interp" type="checkbox" checked /> Оптическая интерполяция движения (FFmpeg)</label>
-        <div class="submit-row"><button class="main-button" id="submit" type="submit">▶ Сгенерировать ролик</button><span class="muted">20 секунд · 5 сцен · MP4 16:9</span></div>
-        <p class="note" id="mode-note">Demo создаёт процедурные пиксельные сцены: проверка пайплайна без вызовов OpenAI.</p>
-      </form>
-    </div>
-    <aside class="panel"><div class="kicker">02 — THE PIPELINE</div><h3>Что происходит внутри</h3><ol class="pipeline">
-      <li><span class="number">01</span><div><div class="step-title">Агент-сценарист</div><div class="step-copy">История → 5 кадровых постановок по 4 секунды</div></div></li>
-      <li><span class="number">02</span><div><div class="step-title">Visual Bible</div><div class="step-copy">Один персонаж, костюм, остров и цветовая палитра</div></div></li>
-      <li><span class="number">03</span><div><div class="step-title">16 кадров в сцене</div><div class="step-copy">GPT-Image-2.6 Sunburst → анимированный GIF</div></div></li>
-      <li><span class="number">04</span><div><div class="step-title">30 / 60 FPS</div><div class="step-copy">Оптический поток + плавный монтаж FFmpeg</div></div></li>
-      <li><span class="number">05</span><div><div class="step-title">MP4 на выходе</div><div class="step-copy">H.264, 1280 × 720, 20 секунд</div></div></li>
-    </ol></aside>
-  </div>
-  <section class="status" id="status" aria-live="polite"><div class="status-top"><div class="stage" id="stage">Начинаем</div><div class="percent" id="percent">0%</div></div><div class="track"><div class="bar" id="bar"></div></div><p class="muted" id="detail">Статус обновляется автоматически</p></section>
-  <section class="story" id="story"><div class="kicker">03 — STORYBOARD</div><h2 class="section-title" id="story-title">Раскадровка</h2><div class="shots" id="shots"></div></section>
-  <section class="result" id="result"><div class="kicker">04 — FINAL CUT</div><h2 class="section-title">Твой 20-секундный ролик</h2><video id="player" controls playsinline preload="metadata"></video><div class="result-actions"><a id="download" href="#" download="blockframe_20s.mp4">↓ Скачать MP4</a><a id="story-file" href="#" download="storyboard.json">↓ Скачать сценарий</a><span class="meta" id="video-meta"></span></div></section>
-  <footer><span>BLOCKFRAME — Proof of Concept · 2026</span><span>Тестовый рендер не является результатом GPT-Image. API-ключ хранится только на сервере.</span></footer>
+<body><div class="wrap">
+<div class="brand">▦ BLOCKFRAME <span class="pill">STAGE 2 · IMAGES → VIDEO</span></div>
+<header class="hero"><h1>От идеи до <em>Minecraft Machinima</em>.</h1><p>Сценарист разбивает текст на 5 сцен. Sunburst генерирует PNG-опорные кадры и промежуточные изображения. Монтаж, движение и частоту кадров обеспечивает наш видеоконвейер — без AI-GIF.</p></header>
+<div class="grid">
+<section class="panel">
+<div class="kicker">01 — Создание проекта</div><h2>Промпт → 20 секунд</h2>
+<form id="generator">
+<label for="prompt">Сюжет</label>
+<textarea id="prompt" minlength="12" maxlength="2000" required>Робинзон после кораблекрушения просыпается на необитаемом тропическом острове в мире Minecraft. Он осматривается, находит обломки корабля, делает первый инструмент и решает выжить. Кинематографичная история без слов, плавная камера, стиль Minecraft Machinima.</textarea>
+<div class="controls">
+<div><label for="mode">Режим</label><select id="mode"><option value="demo">Demo</option><option value="ai">AI · Sunburst</option></select></div>
+<div><label for="frames">Картинок на сцену</label><select id="frames"><option value="4">4 (20 всего)</option><option selected value="6">6 (30 всего)</option><option value="8">8 (40 всего)</option><option value="12">12 (60 всего)</option></select></div>
+<div><label for="fps">Экспорт MP4</label><select id="fps"><option selected value="30">30 FPS</option><option value="60">60 FPS</option></select></div>
+</div>
+<label class="check"><input id="interp" type="checkbox" /> Оптическая интерполяция движения FFmpeg (медленнее, возможны артефакты)</label>
+<div class="row flexwrap" style="margin-top:18px"><button type="submit" id="submit">▶ Создать ролик</button><span id="note" class="muted">Demo не тратит API-токены.</span></div>
+</form></section>
+<aside class="panel"><div class="kicker">02 — Архитектура</div>
+<ol class="pipeline">
+<li><strong>Story agent</strong> — 5 сцен × 4 секунды</li>
+<li><strong>Visual bible</strong> — неизменная внешность персонажа и материалов</li>
+<li><strong>3 keyframes на сцену</strong> — начало, центральная поза, конец</li>
+<li><strong>In-betweens</strong> — остальные кадры относительно двух опорных</li>
+<li><strong>FFmpeg</strong> — склейка / дополнительная интерполяция / MP4</li>
+<li><strong>Регенерация</strong> — перерисовка одной сцены и локальный перемонтаж</li>
+</ol><div class="hint">Выходные 30/60 FPS не означают 30/60 уникальных AI-кадров за секунду. Проверять плавность нужно на реальных сценах.</div>
+</aside></div>
+<section id="status" class="status"><div class="statusbox"><div class="row"><strong id="stage">Начинаем</strong><strong id="percent">0%</strong></div><div class="barwrap"><div class="bar" id="bar"></div></div><div id="detail" class="muted">Статус генерации</div></div></section>
+<section id="story" class="story"><div class="kicker">03 — Storyboard / кадры</div><div id="shots" class="shots"></div></section>
+<section id="editor" class="editor panel"><div class="kicker">04 — Регенерация одной сцены</div><h2>Исправить один фрагмент</h2><p>Кадры других сцен сохранятся. Предыдущий ролик не удаляется при ошибке. Регенерация в AI-режиме расходует новые запросы к API.</p>
+<div class="editor-grid"><div><label for="shot-select">Выберите сцену</label><select id="shot-select"><option value="1">Сцена 1</option><option value="2">Сцена 2</option><option value="3">Сцена 3</option><option value="4">Сцена 4</option><option value="5">Сцена 5</option></select></div><div><label for="revision-note">Указание режиссёра (необязательно)</label><textarea id="revision-note" maxlength="500" placeholder="Например: медленнее движение рук, камера ближе, не менять костюм Робинзона"></textarea></div></div>
+<div class="row flexwrap"><button id="regen" type="button" class="btn-secondary">↻ Перегенерировать выбранную сцену</button><span id="revisions" class="log"></span></div>
+</section>
+<section id="result" class="result"><div class="kicker">05 — Финальный ролик</div><video controls playsinline preload="metadata" id="player"></video><div class="actions"><a id="download" download="blockframe_20s.mp4" href="#">↓ Скачать MP4</a><a id="story-file" download="storyboard.json" href="#">↓ Storyboard JSON</a><a id="plan-file" download="shot_plan.json" href="#">↓ Shot plan JSON</a><span id="video-meta" class="muted"></span></div></section>
 </div>
 <script>
-  const $ = id => document.getElementById(id);
-  const form = $('generator'), submit = $('submit'), mode = $('mode');
-  let timer = null;
-  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  function updateMode(){ $('mode-note').textContent = mode.value === 'ai'
-    ? 'AI: выполняет платные запросы (1 сценарий + 1 референс + 5 GIF). Требуется OPENAI_API_KEY и доступ к GIF preview.'
-    : 'Demo создаёт процедурные пиксельные сцены: проверка пайплайна без вызовов OpenAI.'; }
-  mode.addEventListener('change', updateMode);
-  async function poll(id){
-    try{
-      const res = await fetch('/api/jobs/'+id); const job = await res.json();
-      $('stage').textContent = job.stage; $('percent').textContent = job.progress+'%'; $('bar').style.width = job.progress+'%';
-      if(job.storyboard && !$('story').classList.contains('visible')){
-        $('story').classList.add('visible');$('story-title').textContent = job.storyboard.title;
-        $('shots').innerHTML = job.storyboard.shots.map((s,i)=>`<article class="shot"><div class="shot-num">SHOT ${String(i+1).padStart(2,'0')} / 4 СЕК</div><strong>${esc(s.title)}</strong><small>${esc(s.action)}</small></article>`).join('');
-      }
-      if(job.status === 'failed'){
-        clearInterval(timer);$('stage').textContent='Ошибка рендера'; $('stage').classList.add('error');
-        $('detail').textContent=job.error||'Неизвестная ошибка';submit.disabled=false;submit.textContent='▶ Повторить';
-      }else if(job.status === 'done'){
-        clearInterval(timer);$('result').classList.add('visible'); $('player').src=job.video_url;
-        $('download').href=job.video_url;$('story-file').href='/api/jobs/'+id+'/storyboard';
-        $('video-meta').textContent='20 секунд · '+job.fps+' FPS · 1280×720 · '+job.mode.toUpperCase();
-        $('detail').textContent='Видео готово и сохранено на сервере';submit.disabled=false;submit.textContent='▶ Создать ещё';
-      }
-    }catch(err){clearInterval(timer);$('detail').textContent='Не удалось получить статус: '+err.message;submit.disabled=false;}
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let currentJobId = null, timer = null, lastVideoVersion = -1, lastShotVersion = '';
+function note(){const ai = $('mode').value === 'ai';$('note').textContent = ai ? `AI: ${Number($('frames').value)*5 + 1} платных запросов изображений + один сценарий. Нужен OPENAI_API_KEY.` : 'Demo: 0 вызовов OpenAI; изображения процедурные и не повторяют сюжет буквально.';}
+$('mode').addEventListener('change', note); $('frames').addEventListener('change', note);
+function beginPoll(){if(timer)clearInterval(timer);timer=setInterval(()=>poll(currentJobId).catch(e=>{$('detail').textContent = e.message}),1400);}
+function renderShots(job){
+  if(!job.storyboard) return;
+  $('story').classList.add('visible');
+  const version = `${job.video_version || 0}-${job.status}`;
+  if(version === lastShotVersion) return;
+  lastShotVersion = version;
+  $('shots').innerHTML = job.storyboard.shots.map((s, i)=>{
+    const n = i + 1;
+    const image = job.shot_dirs && job.shot_dirs.length ? `<img loading="lazy" alt="Первый кадр сцены ${n}" src="/api/jobs/${job.id}/shots/${n}/frames/1?v=${job.video_version}" />` : '';
+    const revised = (job.revisions || [])[i] || 0;
+    return `<article class="shot">${image}<div class="shot-body"><small>SHOT ${String(n).padStart(2,'0')} / 4 С · REV ${revised}</small><strong>${esc(s.title)}</strong><span>${esc(s.action)}</span><button type="button" class="btn-secondary choose-shot" data-shot="${n}">Редактировать сцену</button></div></article>`;
+  }).join('');
+}
+$('shots').addEventListener('click', event=>{ const btn=event.target.closest('[data-shot]');if(!btn)return;$('shot-select').value=btn.dataset.shot;$('editor').scrollIntoView({behavior:'smooth',block:'center'});});
+async function poll(id){
+  if(!id) return;
+  const res=await fetch(`/api/jobs/${id}`);if(!res.ok)throw new Error('Не удалось получить статус задания');
+  const job=await res.json();
+  $('stage').textContent=job.stage;$('percent').textContent=job.progress+'%';$('bar').style.width=job.progress+'%';
+  renderShots(job);
+  if(job.status==='failed'){clearInterval(timer);$('detail').textContent=job.error||'Ошибка генерации';$('detail').classList.add('error');$('submit').disabled=false;$('submit').textContent='▶ Повторить';return;}
+  if(job.status==='done'){
+    clearInterval(timer);
+    $('result').classList.add('visible');$('editor').classList.add('visible');
+    const videoUrl=`${job.video_url}?v=${job.video_version}`;
+    if(job.video_version!==lastVideoVersion){$('player').src=videoUrl;lastVideoVersion=job.video_version;}
+    $('download').href=videoUrl;$('story-file').href=`/api/jobs/${id}/storyboard`;$('plan-file').href=`/api/jobs/${id}/shot-plan`;
+    $('video-meta').textContent=`20 сек · ${job.fps} FPS · ${job.frame_count_total} PNG · ${job.mode.toUpperCase()}`;
+    $('revisions').textContent=`Версии сцен: ${job.revisions.map((r,i)=>`${i+1}:${r}`).join(' · ')}`;
+    $('detail').textContent=job.regen_error ? `Ошибка регенерации (старая версия сохранена): ${job.regen_error}` : 'Готово. Можно выбрать сцену и перегенерировать только её.';
+    $('detail').classList.toggle('error',Boolean(job.regen_error));
+    $('regen').disabled=false;$('submit').disabled=false;$('submit').textContent='▶ Новый ролик';
+  } else if(job.status==='regenerating'){
+    $('regen').disabled=true;$('detail').textContent='Обновляется выбранная сцена; старое видео остаётся доступным.';
+  } else {
+    $('detail').textContent='Генерация в процессе…';
   }
-  form.addEventListener('submit', async e=>{
-    e.preventDefault(); if(timer) clearInterval(timer);
-    submit.disabled=true;submit.textContent='Генерируем…';$('stage').classList.remove('error');
-    $('status').classList.add('visible');$('result').classList.remove('visible');$('story').classList.remove('visible');$('shots').replaceChildren();
-    $('stage').textContent='Отправляем задание';$('detail').textContent='';$('bar').style.width='1%';$('percent').textContent='1%';
-    try{
-      const response=await fetch('/api/jobs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:$('prompt').value,mode:mode.value,fps:Number($('fps').value),interpolate:$('interp').checked})});
-      const job=await response.json();
-      if(!response.ok) throw new Error(typeof job.detail==='string'?job.detail:JSON.stringify(job.detail));
-      await poll(job.id);timer=setInterval(()=>poll(job.id),1500);
-    }catch(err){$('stage').textContent='Ошибка запуска';$('stage').classList.add('error');$('detail').textContent=err.message;submit.disabled=false;submit.textContent='▶ Повторить';}
-  });
-  fetch('/api/health').then(r=>r.json()).then(info=>{if(info.api_key_configured) mode.value='ai';updateMode();}).catch(()=>{});
+}
+$('generator').addEventListener('submit',async e=>{
+  e.preventDefault();if(timer)clearInterval(timer);
+  currentJobId=null;lastVideoVersion=-1;lastShotVersion='';$('story').classList.remove('visible');$('editor').classList.remove('visible');$('result').classList.remove('visible');
+  $('status').classList.add('visible');$('submit').disabled=true;$('submit').textContent='Создаём…';$('detail').classList.remove('error');
+  try{
+    const response=await fetch('/api/jobs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:$('prompt').value,mode:$('mode').value,frames_per_shot:Number($('frames').value),fps:Number($('fps').value),interpolate:$('interp').checked})});
+    const body=await response.json();if(!response.ok)throw new Error(body.detail||'Не удалось создать задание');
+    currentJobId=body.id;await poll(currentJobId);beginPoll();
+  }catch(err){$('detail').textContent=err.message;$('detail').classList.add('error');$('submit').disabled=false;$('submit').textContent='▶ Повторить';}
+});
+$('regen').addEventListener('click',async()=>{
+  if(!currentJobId)return;
+  const shotNumber=Number($('shot-select').value);$('regen').disabled=true;$('detail').classList.remove('error');
+  try{
+    const res=await fetch(`/api/jobs/${currentJobId}/shots/${shotNumber}/regenerate`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({instruction:$('revision-note').value})});
+    const body=await res.json();if(!res.ok)throw new Error(body.detail||'Не удалось перегенерировать');
+    $('stage').textContent=`Сцена ${shotNumber}: регенерация`;$('detail').textContent='Задание принято.';beginPoll();
+  }catch(err){$('detail').textContent=err.message;$('detail').classList.add('error');$('regen').disabled=false;}
+});
+fetch('/api/health').then(r=>r.json()).then(data=>{if(data.api_key_configured)$('mode').value='ai';note();}).catch(note);
 </script>
 </body></html>
