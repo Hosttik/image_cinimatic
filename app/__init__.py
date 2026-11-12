@@ -1,0 +1,1 @@
+"""Minecraft machinima generator MVP."""
