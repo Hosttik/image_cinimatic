@@ -36,8 +36,8 @@ def build_reference(story: dict[str, Any], folder: Path, *, client: httpx.Client
         "Single still master style and character reference for all subsequent shots, "
         "16:9 landscape full-body cinematic Minecraft machinima key art. "
         f"Style: {story['visual_bible']} Protagonist: {story['character_bible']} "
-        "A readable three-quarter full-body view of Robinson on a tropical voxel island, "
-        "ocean in background, clear consistent costume/colors, no text, no HUD."
+        f"A readable three-quarter full-body view of the main character in the opening location: {story['shots'][0]['location']}. "
+        "Consistent costume/colors, no text, no HUD."
     )
     answer = _post_with_retry(
         client, "/images/generations", headers={"Authorization": f"Bearer {api_key}"},
@@ -54,7 +54,8 @@ def make_gif(story: dict[str, Any], shot: dict[str, str], index: int, reference:
         "Create one ANIMATED GIF of 16 chronologically ordered frames showing 4 seconds "
         "of one continuous Minecraft machinima shot. No cuts, no montages, no scene changes, "
         "no loops, no titles, no HUD. Treat the provided image as the STRICT character "
-        "and visual-style reference; preserve face, costume, voxel proportions and palette. "
+        "and visual-style reference; preserve face, costume, voxel proportions and palette, "
+        "but change the environment and camera to suit this shot. "
         "Use very small incremental changes per frame suitable for optical-flow interpolation; "
         "avoid teleportation, spinning, rapid motion, object morphing and camera jumps. "
         f"Style: {story['visual_bible']} Character: {story['character_bible']} "

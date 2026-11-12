@@ -121,7 +121,7 @@ def get_video(job_id: str) -> FileResponse:
     with lock:
         if job_id not in jobs or jobs[job_id]["status"] != "done":
             raise HTTPException(404, "Ролик ещё не готов")
-    return FileResponse(OUTPUT_DIR / job_id / "result.mp4", media_type="video/mp4", filename="minecraft_robinson_20s.mp4")
+    return FileResponse(OUTPUT_DIR / job_id / "result.mp4", media_type="video/mp4", filename="blockframe_20s.mp4")
 
 
 @app.get("/api/jobs/{job_id}/storyboard")

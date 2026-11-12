@@ -96,7 +96,8 @@ def create_storyboard(prompt: str, *, client: httpx.Client, api_key: str, model:
     instructions = (
         "You are a professional cinematic Minecraft machinima director and storyboard agent. "
         "Write a coherent story for EXACTLY 20 seconds, divided into EXACTLY five 4-second shots. "
-        "Use a single recurring Robinson Crusoe voxel protagonist and a consistent island/world. "
+        "Follow the user-provided characters, setting, genre and action; never force Robinson Crusoe if the user asked for something else. "
+        "Build a single coherent world and stable, recurring character designs. "
         "Describe gentle, physically plausible continuous movement in each shot: 16 consecutive "
         "animation frames must show one action, not a montage. Keep camera and actions subtle to "
         "enable motion interpolation. No titles, logos, watermarks, UI, copyrighted soundtrack. "
